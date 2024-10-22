@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 model_file = 'LSTM_Bitcoin_5_1(98831.51).h5'
 try:
     model = load_model(model_file)
+    # st.success("Bitcoin price prediction model loaded successfully.")  # Removed this line
 except Exception as e:
     st.error(f"Error loading Bitcoin model: {e}")
 
@@ -49,29 +50,8 @@ num_days = st.slider("Select number of days to forecast", min_value=1, max_value
 current_date = datetime.now().strftime('%Y-%m-%d')
 st.write(f"Current Date: {current_date}")
 
-# Custom CSS for button styling
-st.markdown("""
-    <style>
-        .blue-button {
-            background-color: #007BFF;
-            color: white;  /* Text color */
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            display: inline-block;
-            text-align: center;
-            text-decoration: none;  /* Remove underline */
-        }
-        .blue-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
 # Button to predict Bitcoin prices
-if st.markdown(f'<a class="blue-button" href="#predict">Predict Next {num_days} Days Bitcoin Prices</a>', unsafe_allow_html=True):
+if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
     # Load Bitcoin data
     bitcoin_data = get_bitcoin_data()
     close_prices = bitcoin_data['Close'].values.reshape(-1, 1)

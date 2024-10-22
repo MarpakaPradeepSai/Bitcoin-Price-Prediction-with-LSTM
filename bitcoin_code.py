@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 model_file = 'LSTM_Bitcoin_5_1(98831.51).h5'
 try:
     model = load_model(model_file)
-    # st.success("Bitcoin price prediction model loaded successfully.")  # Removed this line
 except Exception as e:
     st.error(f"Error loading Bitcoin model: {e}")
 

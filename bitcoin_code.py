@@ -54,7 +54,7 @@ st.markdown("""
     <style>
         .blue-button {
             background-color: #007BFF;
-            color: white;
+            color: white;  /* Text color */
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -62,6 +62,7 @@ st.markdown("""
             cursor: pointer;
             display: inline-block;
             text-align: center;
+            text-decoration: none;  /* Remove underline */
         }
         .blue-button:hover {
             background-color: #0056b3;
@@ -70,7 +71,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Button to predict Bitcoin prices
-if st.markdown('<a class="blue-button" href="#predict">Predict Next {num_days} Days Bitcoin Prices</a>', unsafe_allow_html=True):
+if st.markdown(f'<a class="blue-button" href="#predict">Predict Next {num_days} Days Bitcoin Prices</a>', unsafe_allow_html=True):
     # Load Bitcoin data
     bitcoin_data = get_bitcoin_data()
     close_prices = bitcoin_data['Close'].values.reshape(-1, 1)

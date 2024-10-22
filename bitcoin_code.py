@@ -6,7 +6,6 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import load_model
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 
 # Load the Bitcoin model
 model_file = 'LSTM_Bitcoin_5_1(98831.51).h5'
@@ -21,12 +20,8 @@ def get_bitcoin_data(ticker='BTC-INR'):
     data = yf.download(ticker, period='max')
     return data
 
-# Function to generate a list of business days
-def generate_business_days(start_date, num_days):
-    return pd.bdate_range(start=start_date, periods=num_days).tolist()
-
-# Function to make predictions for business days
-def predict_next_business_days(model, data, look_back=5, days=5):
+# Function to make predictions for days
+def predict_next_days(model, data, look_back=5, days=5):
     scaler = MinMaxScaler(feature_range=(0, 1))
     data_scaled = scaler.fit_transform(data)
     
@@ -48,8 +43,8 @@ def predict_next_business_days(model, data, look_back=5, days=5):
 # Streamlit app layout
 st.markdown("<h1 style='text-align: center; font-size: 50px;'>Bitcoin Price Predictor 📈📉</h1>", unsafe_allow_html=True)
 
-# User input for number of business days to forecast
-num_days = st.slider("Select number of business days to forecast", min_value=1, max_value=30, value=5)
+# User input for number of days to forecast
+num_days = st.slider("Select number of days to forecast", min_value=1, max_value=30, value=5)
 
 # Display current date
 current_date = datetime.now().strftime('%Y-%m-%d')
@@ -66,22 +61,23 @@ if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
     st.markdown(f"### Historical Data for Bitcoin (BTC-INR)")
     st.dataframe(bitcoin_data, height=400, width=1000)
 
-    # Predict the next num_days business days
+    # Predict the next num_days
     look_back = 5
-    predictions = predict_next_business_days(model, close_prices, look_back=look_back, days=num_days)
+    predictions = predict_next_days(model, close_prices, look_back=look_back, days=num_days)
     
     # Create dates for the predictions
     last_date = dates[-1]
-    prediction_dates = generate_business_days(last_date + timedelta(days=1), num_days)
+    prediction_dates = [last_date + timedelta(days=i) for i in range(1, num_days + 1)]
 
     # Prepare data for plotting the historical and predicted prices
-    fig, ax = plt.subplots()
-    ax.plot(dates, close_prices, label='Historical Prices')
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(dates, close_prices, label='Historical Prices', color='blue')
     ax.plot(prediction_dates, predictions, label='Predicted Prices', linestyle='--', color='red')
     ax.set_xlabel('Date')
     ax.set_ylabel('Price (INR)')
-    ax.set_title('Bitcoin Prices (BTC-INR)', fontsize=10, fontweight='bold')
+    ax.set_title('Bitcoin Prices (BTC-INR)', fontsize=16, fontweight='bold')
     ax.legend()
+    ax.grid()
 
     st.pyplot(fig)
 
@@ -90,5 +86,5 @@ if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
         'Date': prediction_dates,
         'Predicted Price (INR)': predictions.flatten()
     })
-    st.markdown(f"##### Predicted Bitcoin Prices for the Next {num_days} Business Days")
+    st.markdown(f"##### Predicted Bitcoin Prices for the Next {num_days} Days")
     st.dataframe(prediction_df, width=600)

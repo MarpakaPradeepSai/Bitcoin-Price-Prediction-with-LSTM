@@ -83,7 +83,7 @@ if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
 
     # Show predictions in a table format
     prediction_df = pd.DataFrame({
-        'Date': prediction_dates,
+        'Date': [d.strftime('%Y-%m-%d') for d in prediction_dates],  # Format the date
         'Predicted Price (INR)': predictions.flatten()
     })
     st.markdown(f"##### Predicted Bitcoin Prices for the Next {num_days} Days")

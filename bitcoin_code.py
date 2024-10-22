@@ -8,6 +8,9 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
+# Set page configuration first
+st.set_page_config(page_title="Bitcoin Price Predictor", page_icon="💰", layout="wide")
+
 # Load the Bitcoin model
 model_file = 'LSTM_Bitcoin_5_1(98831.51).h5'
 try:
@@ -42,9 +45,6 @@ def predict_next_business_days(model, data, look_back=5, days=5):
     
     predictions = scaler.inverse_transform(np.array(predictions).reshape(-1, 1))
     return predictions
-
-# Streamlit app layout
-st.set_page_config(page_title="Bitcoin Price Predictor", page_icon="💰", layout="wide")
 
 # Header
 st.markdown("<h1 style='text-align: center; font-size: 50px;'>Bitcoin Price Predictor 💰📈</h1>", unsafe_allow_html=True)

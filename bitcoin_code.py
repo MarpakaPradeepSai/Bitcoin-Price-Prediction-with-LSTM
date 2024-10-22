@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 model_file = 'LSTM_Bitcoin_5_1(98831.51).h5'
 try:
     model = load_model(model_file)
-    # st.success("Bitcoin price prediction model loaded successfully.")
 except Exception as e:
     st.error(f"Error loading Bitcoin model: {e}")
 
@@ -27,7 +26,6 @@ def predict_next_days(model, data, look_back=5, days=5):
     
     last_sequence = data_scaled[-look_back:]
     predictions = []
-
     for _ in range(days):
         X_input = np.reshape(last_sequence, (1, look_back, 1))
         prediction = model.predict(X_input)
@@ -41,7 +39,38 @@ def predict_next_days(model, data, look_back=5, days=5):
     return predictions
 
 # Streamlit app layout
-st.markdown("<h1 style='text-align: center; font-size: 50px;'>Bitcoin Price Predictor 📈📉</h1>", unsafe_allow_html=True)
+st.set_page_config(page_title="Bitcoin Price Predictor", page_icon="💰", layout="wide")
+
+# Custom CSS for styling
+st.markdown("""
+    <style>
+        .title {
+            text-align: center;
+            font-size: 50px;
+            color: #FFAA00;
+            margin: 20px 0;
+        }
+        .header {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .button {
+            background-color: #FFAA00;
+            color: white;
+            font-size: 18px;
+        }
+        .grid {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Title
+st.markdown("<h1 class='title'>Bitcoin Price Predictor 📈📉</h1>", unsafe_allow_html=True)
 
 # User input for number of days to forecast
 num_days = st.slider("Select number of days to forecast", min_value=1, max_value=30, value=5)
@@ -51,14 +80,14 @@ current_date = datetime.now().strftime('%Y-%m-%d')
 st.write(f"Current Date: {current_date}")
 
 # Button to predict Bitcoin prices
-if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
+if st.button(f'Predict Next {num_days} Days Bitcoin Prices', key='predict', css_class='button'):
     # Load Bitcoin data
     bitcoin_data = get_bitcoin_data()
     close_prices = bitcoin_data['Close'].values.reshape(-1, 1)
     dates = bitcoin_data.index
 
     # Display the historical data
-    st.markdown(f"### Historical Data for Bitcoin (BTC-INR)")
+    st.markdown("<div class='header'>### Historical Data for Bitcoin (BTC-INR)</div>", unsafe_allow_html=True)
     st.dataframe(bitcoin_data, height=400, width=1000)
 
     # Predict the next num_days
@@ -86,5 +115,6 @@ if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
         'Date': prediction_dates,
         'Predicted Price (INR)': predictions.flatten()
     })
-    st.markdown(f"##### Predicted Bitcoin Prices for the Next {num_days} Days")
+    st.markdown(f"<div class='header'>##### Predicted Bitcoin Prices for the Next {num_days} Days</div>", unsafe_allow_html=True)
     st.dataframe(prediction_df, width=600)
+

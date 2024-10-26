@@ -103,3 +103,11 @@ if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
     })
     st.markdown(f"##### Predicted Bitcoin Prices for the Next {num_days} Days")
     st.dataframe(prediction_df, width=600)
+
+# Disclaimer
+st.markdown("""
+<div style='text-align: center;'>
+    <h4 style='color: red;'>Disclaimer:</h4>
+    <p>This prediction model is for informational purposes only and should not be used as a basis for making financial decisions.</p>
+</div>
+""", unsafe_allow_html=True)

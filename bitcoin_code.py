@@ -50,34 +50,8 @@ num_days = st.slider("Select number of days to forecast", min_value=1, max_value
 current_date = datetime.now().strftime('%Y-%m-%d')
 st.write(f"Current Date: {current_date}")
 
-# Custom button for prediction
-st.markdown(
-    f"""
-    <style>
-    .custom-button {{
-        background-color: #007bff; /* Bootstrap blue */
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        text-align: center;
-        display: inline-block;
-        margin-top: 10px;
-    }}
-    .custom-button:hover {{
-        background-color: #0056b3; /* Darker blue on hover */
-    }}
-    </style>
-    <button class="custom-button" onclick="document.getElementById('predict-button').click();">Predict Next {num_days} Days Bitcoin Prices</button>
-    <button id="predict-button" style="display:none;" onclick="window.location.reload();"></button>
-    """,
-    unsafe_allow_html=True
-)
-
-# Check if the prediction button is clicked
-if st.button(f'Predict Next {num_days} Days Bitcoin Prices', key='predict-button'):
+# Button to predict Bitcoin prices
+if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
     # Load Bitcoin data
     bitcoin_data = get_bitcoin_data()
     close_prices = bitcoin_data['Close'].values.reshape(-1, 1)
@@ -124,7 +98,7 @@ if st.button(f'Predict Next {num_days} Days Bitcoin Prices', key='predict-button
     
     # Show predictions in a table format
     prediction_df = pd.DataFrame({
-        'Date': [d.strftime('%Y-%m-%d') for d in prediction_dates],
+        'Date': [d.strftime('%Y-%m-%d') for d in prediction_dates],  # Format the date
         'Predicted Price (INR)': predictions.flatten()
     })
     st.markdown(f"##### Predicted Bitcoin Prices for the Next {num_days} Days")

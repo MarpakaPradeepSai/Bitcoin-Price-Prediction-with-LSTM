@@ -8,6 +8,20 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
+# Custom CSS to style the button
+st.markdown("""
+    <style>
+        .stButton > button {
+            background-color: #0066ff;
+            color: white;
+        }
+        .stButton > button:hover {
+            background-color: #0052cc;
+            color: white;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Load the Bitcoin model
 model_file = 'LSTM_Bitcoin_5_1(98831.51).h5'
 try:

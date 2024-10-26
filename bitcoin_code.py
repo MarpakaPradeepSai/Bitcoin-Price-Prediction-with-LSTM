@@ -6,6 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import load_model
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 # Load the Bitcoin model
 model_file = 'LSTM_Bitcoin_5_1(98831.51).h5'
@@ -80,6 +81,21 @@ if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
 
     st.pyplot(fig)
 
+    # Plot only the predicted Bitcoin prices
+    fig2, ax2 = plt.subplots(figsize=(10, 5))
+    ax2.plot(prediction_dates, predictions, marker='o', color='blue')
+    ax2.set_xlabel('Date')
+    ax2.set_ylabel('Predicted Price (INR)')
+    ax2.set_title(f'Predicted Bitcoin Prices for the Next {num_days} Days', fontsize=16, fontweight='bold')
+    
+    # Use DayLocator to specify spacing of tick marks and set the format for the date labels
+    ax2.xaxis.set_major_locator(mdates.DayLocator(interval=1))
+    ax2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    
+    plt.xticks(rotation=45)
+    
+    st.pyplot(fig2)
+    
     # Show predictions in a table format
     prediction_df = pd.DataFrame({
         'Date': [d.strftime('%Y-%m-%d') for d in prediction_dates],  # Format the date

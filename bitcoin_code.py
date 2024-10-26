@@ -40,8 +40,35 @@ def predict_next_days(model, data, look_back=5, days=5):
     predictions = scaler.inverse_transform(np.array(predictions).reshape(-1, 1))
     return predictions
 
-# Streamlit app layout
-st.markdown("<h1 style='text-align: center; font-size: 50px;'>Bitcoin Price Predictor 📈📉</h1>", unsafe_allow_html=True)
+# Streamlit app layout with custom CSS
+st.markdown(
+    """
+    <style>
+    body {
+        background-color: #f0f2f5;
+        color: #333;
+    }
+    .header {
+        text-align: center;
+        font-size: 50px;
+        font-weight: bold;
+        margin-top: 20px;
+        color: #4CAF50;
+    }
+    .disclaimer {
+        text-align: center;
+        color: red;
+    }
+    .prediction-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# Streamlit app header
+st.markdown("<h1 class='header'>Bitcoin Price Predictor 📈📉</h1>", unsafe_allow_html=True)
 
 # User input for number of days to forecast
 num_days = st.slider("Select number of days to forecast", min_value=1, max_value=30, value=5)
@@ -71,8 +98,8 @@ if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
 
     # Prepare data for plotting the historical and predicted prices
     fig, ax = plt.subplots(figsize=(10, 5))
-    ax.plot(dates, close_prices, label='Historical Prices', color='blue')
-    ax.plot(prediction_dates, predictions, label='Predicted Prices', linestyle='--', color='red')
+    ax.plot(dates, close_prices, label='Historical Prices', color='blue', linewidth=2)
+    ax.plot(prediction_dates, predictions, label='Predicted Prices', linestyle='--', color='red', linewidth=2)
     ax.set_xlabel('Date')
     ax.set_ylabel('Price (INR)')
     ax.set_title('Bitcoin Prices (BTC-INR)', fontsize=16, fontweight='bold')
@@ -83,7 +110,7 @@ if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
 
     # Plot only the predicted Bitcoin prices
     fig2, ax2 = plt.subplots(figsize=(10, 5))
-    ax2.plot(prediction_dates, predictions, marker='o', color='blue')
+    ax2.plot(prediction_dates, predictions, marker='o', color='blue', markersize=8)
     ax2.set_xlabel('Date')
     ax2.set_ylabel('Predicted Price (INR)')
     ax2.set_title(f'Predicted Bitcoin Prices for the Next {num_days} Days', fontsize=16, fontweight='bold')
@@ -101,13 +128,13 @@ if st.button(f'Predict Next {num_days} Days Bitcoin Prices'):
         'Date': [d.strftime('%Y-%m-%d') for d in prediction_dates],  # Format the date
         'Predicted Price (INR)': predictions.flatten()
     })
-    st.markdown(f"##### Predicted Bitcoin Prices for the Next {num_days} Days")
+    st.markdown(f"##### Predicted Bitcoin Prices for the Next {num_days} Days", unsafe_allow_html=True)
     st.dataframe(prediction_df, width=600)
 
 # Disclaimer
 st.markdown("""
-<div style='text-align: center;'>
-    <h4 style='color: red;'>Disclaimer:</h4>
+<div class="disclaimer">
+    <h4>Disclaimer:</h4>
     <p>This prediction model is for informational purposes only and should not be used as a basis for making financial decisions.</p>
 </div>
 """, unsafe_allow_html=True)
